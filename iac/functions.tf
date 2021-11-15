@@ -1,4 +1,11 @@
 
+resource "oci_artifacts_container_repository" "container_repository_functions" {
+    compartment_id = var.compartment_ocid
+    display_name = var.ocir_repo_name
+    is_immutable = false
+    is_public = false
+}
+
 resource "oci_functions_application" "cloudnative_2021_fn_app" {
   compartment_id = var.compartment_ocid
   display_name   = "${var.app_name}App"
@@ -7,7 +14,7 @@ resource "oci_functions_application" "cloudnative_2021_fn_app" {
 
 
 resource "null_resource" "Login2OCIR" {
-  depends_on = [oci_functions_application.cloudnative_2021_fn_app,
+  depends_on = [oci_functions_application.cloudnative_2021_fn_app
     oci_identity_policy.faas_read_repos_tenancy_policy,
     oci_identity_policy.admin_manage_function_family_policy,
     oci_identity_dynamic_group.faas_dg,

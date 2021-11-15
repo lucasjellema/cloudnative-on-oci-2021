@@ -27,4 +27,4 @@ locals {
 
 # DEVOPS
 
-variable project_logging_config_retention_period_in_days { default = 1}
+variable project_logging_config_retention_period_in_days { default = 30}
