@@ -62,6 +62,8 @@ data "oci_objectstorage_namespace" "os_namespace" {
 }
 
 
+
+
 # Randoms
 resource "random_string" "deploy_id" {
   length  = 4
