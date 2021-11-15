@@ -1,16 +1,4 @@
-data "oci_core_subnets" "publicsubnets" { 
-  compartment_id = var.compartment_ocid 
-  # only retain the subnets that allow public traffic 
-  filter { 
-     name = "prohibit_public_ip_on_vnic" 
-     values = [ "false"] 
-  }
-}
 
-data "oci_core_vcns" "cloudnative_2021_vcns" {
-    #fetch all VCNS in compartment (there will be only one)
-    compartment_id = var.compartment_id
-}
 
 
 locals { 
