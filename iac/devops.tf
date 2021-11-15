@@ -48,7 +48,7 @@ resource "oci_devops_deploy_environment" "cloudnative2021_tweetretriever_environ
 }
 
 resource "oci_devops_deploy_artifact" "cloudnative2021_tweetretriever_deploy_ocir_artifact" {
-  depends_on                 = [null_resource.FnPush2OCIR2]
+  depends_on                 = [null_resource.FnPush2OCIR]
   project_id                 = oci_devops_project.cloudnative2021_project.id
   deploy_artifact_type       = "DOCKER_IMAGE"
   argument_substitution_mode = "NONE"
