@@ -15,7 +15,7 @@ resource "oci_identity_policy" "devops_compartment_policies" {
 }
 
 locals {
-  devops_pipln_dg = oci_identity_dynamic_group.devops_pipln_dg.0.name
+  devops_pipln_dg = oci_identity_dynamic_group.devops_pipln_dg.name
   allow_devops_manage_compartment_statements = [
     "Allow dynamic-group ${local.devops_pipln_dg} to manage all-resources in compartment id ${var.compartment_ocid}"
   ]
