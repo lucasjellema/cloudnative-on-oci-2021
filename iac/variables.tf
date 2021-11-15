@@ -40,3 +40,12 @@ locals {
 # DEVOPS
 
 variable project_logging_config_retention_period_in_days { default = 30}
+
+# Storage
+variable "bucket_name" {
+  default = "tweet-reports"
+}
+
+variable "bucket_namespace" {
+  default = lookup(data.oci_objectstorage_namespace.os_namespace, "namespace")
+}
