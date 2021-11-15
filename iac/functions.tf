@@ -7,6 +7,22 @@ resource "oci_artifacts_container_repository" "container_repository_functions_fa
     is_public = false
 }
 
+resource "oci_artifacts_container_repository" "container_repository_functions_tweetretriever" {
+    # note: repository = store for all images versions of a specific container image - so it included the function name
+    compartment_id = var.compartment_ocid
+    display_name = "${var.ocir_repo_name}/tweet_retriever"
+    is_immutable = false
+    is_public = false
+}
+
+resource "oci_artifacts_container_repository" "container_repository_functions_tweetsummarizer" {
+    # note: repository = store for all images versions of a specific container image - so it included the function name
+    compartment_id = var.compartment_ocid
+    display_name = "${var.ocir_repo_name}/tweet_summarizer"
+    is_immutable = false
+    is_public = false
+}
+
 resource "oci_functions_application" "cloudnative_2021_fn_app" {
   compartment_id = var.compartment_ocid
   display_name   = "${var.app_name}App"
