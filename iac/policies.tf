@@ -1,3 +1,29 @@
+## DEVOPS
+resource "oci_identity_dynamic_group" "devops_pipln_dg" {
+  compartment_id = var.tenancy_ocid
+  name           = "${var.app_name}-devops-pipln-dg"
+  description    = "${var.app_name} DevOps Pipeline Dynamic Group"
+  matching_rule  = "All {resource.type = 'devopsdeploypipeline', resource.compartment.id = '${var.compartment_ocid}'}"
+}
+
+resource "oci_identity_policy" "devops_compartment_policies" {
+  depends_on  = [oci_identity_dynamic_group.devops_pipln_dg]
+  name        = "${var.app_name}-devops-compartment-policies"
+  description = "${var.app_name} DevOps Compartment Policies"
+  compartment_id = var.tenancy_ocid
+  statements     = local.allow_devops_manage_compartment_statements
+}
+
+locals {
+  devops_pipln_dg = oci_identity_dynamic_group.devops_pipln_dg.0.name
+  allow_devops_manage_compartment_statements = [
+    "Allow dynamic-group ${local.devops_pipln_dg} to manage all-resources in compartment id ${var.compartment_ocid}"
+  ]
+}
+
+
+## FUNCTIONS
+
 resource "oci_identity_dynamic_group" "faas_dg" {
   name           = "${var.app_name}-faas-dg"
   description    = "${var.app_name}-faas-dg"

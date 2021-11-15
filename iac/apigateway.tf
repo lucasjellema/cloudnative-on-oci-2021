@@ -14,7 +14,7 @@ output "publicsubnet" {
 output "vcn_id" { 
   value = local.vcn_id
 }
-
+    
 
 
 

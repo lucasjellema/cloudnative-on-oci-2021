@@ -8,7 +8,7 @@ Prepare:
 * create compartment in OCI (or empty existing compartment)
 * run VCN networking wizard to create a VCN with Internet Connectivity (https://console.us-ashburn-1.oraclecloud.com/networking/solutions/vcn)
 * TODO: add security rules in list for inbound HTTP(S) traffic (to API Gateway) 
-* start an environment and make sure Terraform can be used in it (see below for setting up Terraform)
+* start an environment and make sure Terraform can be used in it (see below for setting up Terraform) and that the Fn client is available (see below)
 * git clone this repository: git clone https://github.com/lucasjellema/cloudnative-on-oci-2021
 * edit files .oci/config and .oci/oci_api_key.pem to contain proper values
 * copy directory .oci to ~/.oci  (cp -r .oci ~)
@@ -43,3 +43,10 @@ unzip terraform-provider-oci_4.52.0_linux_amd64.zip
 to do discovery:
 ./terraform-provider-oci_v4.52.0_x4 -command=export -compartment_name="gb-tour-2020-latam" -services=availability_domain,apigateway -output_path=/root/iac
 
+
+### Set up Fn Client 
+
+Check on [Fn Project](https://fnproject.io/tutorials/install/)
+```
+curl -LSs https://raw.githubusercontent.com/fnproject/cli/master/install | sh
+```

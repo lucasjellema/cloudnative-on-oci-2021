@@ -1,12 +1,18 @@
 variable compartment_ocid { default = "define your target compartment id" }
 variable region { default = "define your target region, for example us-ashburn-1" }
 variable app_name {default = "cloudnative-2021"}
+variable app_version {default = "0.0.1"}
 variable tenancy_ocid {default = "define the ocid of the tenancy"}
 variable ocir_user_name { default = "define the username for the OCIR repos"}
 variable ocir_user_password {
     default = "password for OCIR repos"
     sensitive = true
     }
+
+variable "ocir_repo_name" {
+  default = "functions"
+}
+
 
 locals {
   app_name_lower = lower(var.app_name)
