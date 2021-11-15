@@ -54,7 +54,7 @@ resource "oci_devops_deploy_artifact" "cloudnative2021_tweetretriever_deploy_oci
   argument_substitution_mode = "NONE"
   deploy_artifact_source {
     deploy_artifact_source_type = "OCIR"
-    image_uri                   = "${local.ocir_docker_repository}/${local.ocir_namespace}/${var.ocir_repo_name}/fake-fun:0.0.1"
+    image_uri                   = "${local.ocir_docker_repository}/${local.ocir_namespace}/${var.ocir_repo_name}/cloudnative-2021/fake-fun:0.0.1"
   }
 }
 
@@ -88,4 +88,11 @@ resource "oci_devops_deploy_stage" "cloudnative2021_deploy_stage" {
   namespace                       = "default"
   function_deploy_environment_id  = oci_devops_deploy_environment.cloudnative2021_tweetretriever_environment.id
   docker_image_deploy_artifact_id = oci_devops_deploy_artifact.cloudnative2021_tweetretriever_deploy_ocir_artifact.id
+}
+
+resource "oci_devops_deployment" "test_deployment_run" {
+  depends_on         = [null_resource.FnPush2OCIR, oci_devops_deploy_stage.cloudnative2021_deploy_stage_deploy_stage]
+  deploy_pipeline_id = oci_devops_deploy_pipeline.cloudnative2021_tweetretriever_deploy_pipeline.id
+  deployment_type    = "PIPELINE_DEPLOYMENT"
+  display_name       = "${var.app_name}_${random_string.deploy_id.result}_devops_deployment"
 }
