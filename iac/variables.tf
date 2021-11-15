@@ -25,3 +25,6 @@ locals {
   ocir_namespace         = lookup(data.oci_objectstorage_namespace.os_namespace, "namespace")
 }
 
+# DEVOPS
+
+variable project_logging_config_retention_period_in_days { default = 1}
