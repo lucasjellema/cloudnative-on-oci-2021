@@ -10,7 +10,7 @@ variable ocir_user_password {
     }
 
 variable "ocir_repo_name" {
-  default = "functions"
+  default = "cloudnative-2021/functions"
 }
 
 

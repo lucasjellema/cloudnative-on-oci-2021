@@ -54,7 +54,7 @@ resource "oci_devops_deploy_artifact" "cloudnative2021_tweetretriever_deploy_oci
   argument_substitution_mode = "NONE"
   deploy_artifact_source {
     deploy_artifact_source_type = "OCIR"
-    image_uri                   = "${local.ocir_docker_repository}/${local.ocir_namespace}/${var.ocir_repo_name}/cloudnative-2021/fake-fun:0.0.1"
+    image_uri                   = "${local.ocir_docker_repository}/${local.ocir_namespace}/${var.ocir_repo_name}/fake-fun:0.0.1"
   }
 }
 
