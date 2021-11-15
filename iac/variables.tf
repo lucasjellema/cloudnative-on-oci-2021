@@ -18,16 +18,16 @@ data "oci_core_public_ips" "test_public_ips" {
     compartment_id = var.compartment_ocid
     scope = "REGION"
 
-    lifetime = var.public_ip_lifetime
+    
 }
 
 output "publicipaddress" { 
-  value =  data.oci_core_public_ips.test_public_ips[0]
+  value = local.public_ip
 }
 
 locals {
   app_name_lower = lower(var.app_name)
-  public_ip =  data.oci_core_public_ips.test_public_ips[0].ip_address
+  public_ip =  data.oci_core_public_ips[0].ip_address
 }
 
 # OCIR repo name & namespace
