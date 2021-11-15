@@ -6,6 +6,8 @@ locals {
   publicsubnet = data.oci_core_subnets.publicsubnets.subnets[0]
   vcn_id = data.oci_core_vcns.cloudnative_2021_vcns.virtual_networks[0].id
 } 
+
+ 
 output "publicsubnet" { 
   value = local.publicsubnet
 }
@@ -40,7 +42,7 @@ resource oci_apigateway_gateway cloudnative-2021-apigateway {
 }
 
 
-resource oci_apigateway_deployment export_cloudnative-2021 {
+resource oci_apigateway_deployment apigw-deployment_cloudnative-2021 {
   compartment_id = var.compartment_ocid
   display_name = "cloudnative-2021"
   freeform_tags = {

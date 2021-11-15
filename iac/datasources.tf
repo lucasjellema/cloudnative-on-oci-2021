@@ -12,6 +12,9 @@ data "oci_core_vcns" "cloudnative_2021_vcns" {
     compartment_id = var.compartment_ocid
 }
 
+
+
+
 # Gets a list of Availability Domains
 data "oci_identity_availability_domains" "ADs" {
   compartment_id = var.tenancy_ocid
@@ -21,7 +24,6 @@ data "oci_identity_availability_domains" "ADs" {
 data "oci_identity_tenancy" "tenant_details" {
   tenancy_id = var.tenancy_ocid
 
-  provider = oci.current_region
 }
 
 data "oci_identity_regions" "home_region" {
@@ -29,8 +31,6 @@ data "oci_identity_regions" "home_region" {
     name   = "key"
     values = [data.oci_identity_tenancy.tenant_details.home_region_key]
   }
-
-  provider = oci.region
 }
 
 

@@ -1,7 +1,3 @@
-locals { 
-  # store the first (and only) compartment returned from the data source in the local variable 
-  publicsubnet = data.oci_core_subnets.publicsubnets.subnets[0]
-} 
 
 resource "oci_functions_application" "cloudnative_2021_fn_app" {
   compartment_id = var.compartment_ocid
