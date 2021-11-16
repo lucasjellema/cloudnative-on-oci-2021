@@ -13,10 +13,11 @@ variable "ocir_repo_name" {
   default = "cloudnative-2021/functions"
 }
 
-data "oci_core_public_ips" "test_public_ips" {
+data "oci_core_public_ips" "public_ips" {
     #Required
     compartment_id = var.compartment_ocid
     scope = "REGION"
+    lifetime = "RESERVED"
 
     
 }
@@ -27,7 +28,7 @@ output "publicipaddress" {
 
 locals {
   app_name_lower = lower(var.app_name)
-  public_ip =  data.oci_core_public_ips[0].ip_address
+  public_ip =  data.oci_core_public_ips.public_ips.public_ips[0].ip_address
 }
 
 # OCIR repo name & namespace
@@ -43,9 +44,10 @@ variable project_logging_config_retention_period_in_days { default = 30}
 
 # Storage
 variable "bucket_name" {
-  default = "tweet-reports"
+  # this value is used to create the bucket from and should be passed as parameter to the tweet_retriever function
+  default = "twitter_reports"
 }
 
-variable "bucket_namespace" {
-  default = lookup(data.oci_objectstorage_namespace.os_namespace, "namespace")
+locals { 
+  bucket_namespace = lookup(data.oci_objectstorage_namespace.os_namespace, "namespace")
 }

@@ -19,7 +19,6 @@ output "vcn_id" {
 
 
 resource oci_apigateway_gateway cloudnative-2021-apigateway {
-  #certificate_id = <<Optional value not found in discovery>>
   compartment_id = var.compartment_ocid
   display_name  = "cloudnative-2021-gateway"
   endpoint_type = "PUBLIC"
@@ -43,6 +42,7 @@ resource oci_apigateway_gateway cloudnative-2021-apigateway {
 
 
 resource oci_apigateway_deployment apigw-deployment_cloudnative-2021 {
+ depends_on = [oci_apigateway_gateway.cloudnative-2021-apigateway   ]
   compartment_id = var.compartment_ocid
   display_name = "cloudnative-2021"
   freeform_tags = {
@@ -92,8 +92,7 @@ resource oci_core_security_list inbound-https-for-vcn-cloudnative-2021-security-
   compartment_id = var.compartment_ocid
   display_name = "Additional Security List for vcn-cloudnative-2021 allowing inbound https traffic"
   ingress_security_rules {
-    description = "Allow network traffic from any origin to Port 443"
-    #icmp_options = <<Optional value not found in discovery>>
+    description = "Allow HTTPS network traffic from any origin to Port 443"
     protocol    = "6"
     source      = "0.0.0.0/0"
     source_type = "CIDR_BLOCK"
@@ -101,9 +100,29 @@ resource oci_core_security_list inbound-https-for-vcn-cloudnative-2021-security-
     tcp_options {
       max = "443"
       min = "443"
-      #source_port_range = <<Optional value not found in discovery>>
     }
-    #udp_options = <<Optional value not found in discovery>>
   }
   vcn_id = local.vcn_id
+}
+
+data "oci_core_public_ips" "public_ips" {
+  depends_on     = [oci_core_security_list.inbound-https-for-vcn-cloudnative-2021-security-list]
+    #Required
+    compartment_id = var.compartment_ocid
+    scope = "REGION"
+    # lifetime = "RESERVED"
+
+    
+}
+
+output "publicipaddress" { 
+  value = local.public_ip[0].ip_address
+}
+output "publicipaddress2" { 
+  value = local.public_ip[1].ip_address
+}
+
+locals {
+  app_name_lower = lower(var.app_name)
+  public_ip =  data.oci_core_public_ips.public_ips.public_ips
 }

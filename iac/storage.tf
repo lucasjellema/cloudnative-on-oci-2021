@@ -1,6 +1,7 @@
-resource "oci_objectstorage_bucket" "test_bucket" {
+resource "oci_objectstorage_bucket" "twitter_reports_bucket" {
     #Required
     compartment_id = var.compartment_ocid
     name = var.bucket_name
-    namespace = var.bucket_namespace
+    namespace = local.bucket_namespace
+    objectEventsEnabled = true # we want an event to published when a new twitter report is created
 }
