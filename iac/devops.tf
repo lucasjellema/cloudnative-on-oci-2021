@@ -143,7 +143,7 @@ resource "oci_devops_deploy_stage" "cloudnative2021_tweetreportdigester_deploy_s
 }
 
 resource "oci_devops_deployment" "test_deployment_run" {
-  depends_on         = [null_resource.FnPush2OCIR, oci_devops_deploy_stage.cloudnative2021_deploy_stage]
+  depends_on         = [null_resource.FnTweetRetrieverPush2OCIR, oci_devops_deploy_stage.cloudnative2021_tweetretriever_deploy_stage]
   deploy_pipeline_id = oci_devops_deploy_pipeline.cloudnative2021_tweetretriever_deploy_pipeline.id
   deployment_type    = "PIPELINE_DEPLOYMENT"
   display_name       = "${var.app_name}_tweetretriever_${random_string.deploy_id.result}_devops_deployment"

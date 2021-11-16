@@ -138,8 +138,8 @@ data "oci_core_public_ips" "public_ips" {
 output "publicipaddress" { 
   value = local.public_ip[0].ip_address
 }
-output "publicipaddress2" { 
-  value = local.public_ip[1].ip_address
+output "publicipaddresses" { 
+  value = local.public_ip
 }
 
 locals {

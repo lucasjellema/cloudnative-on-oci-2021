@@ -13,7 +13,7 @@ depends_on     = [oci_ons_notification_topic.cloudnative2021_twitter_report_aler
     }
   }
   compartment_id = var.compartment_ocid
-  condition      = "{\"eventType\":[\"com.oraclecloud.objectstorage.createobject\"],\"data\":{\"additionalDetails\":{\"bucketName\":[oci_objectstorage_bucket.twitter_reports_bucket.name]}}}"
+  condition      = "{\"eventType\":[\"com.oraclecloud.objectstorage.createobject\"],\"data\":{\"additionalDetails\":{\"bucketName\":[\"${oci_objectstorage_bucket.twitter_reports_bucket.name\"]}}}"
   description  = "When a Twitter Report becomes available (document added to bucket) a Notification is to be published for the benefit of consumers to act upon"
   display_name = "TWITTER_REPORT_EVENTS"
   is_enabled = "true"
