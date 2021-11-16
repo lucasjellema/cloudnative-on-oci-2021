@@ -40,8 +40,8 @@ resource "oci_devops_project" "cloudnative2021_project" {
 }
 
 resource "oci_devops_deploy_environment" "cloudnative2021_tweetretriever_environment" {
-  display_name            = "${var.app_name}_devops_environment"
-  description             = "${var.app_name}_devops_environment"
+  display_name            = "${var.app_name}_tweetretriever_devops_environment"
+  description             = "${var.app_name}_tweetretriever_devops_environment"
   deploy_environment_type = "FUNCTION"
   project_id              = oci_devops_project.cloudnative2021_project.id
   function_id             = oci_functions_function.tweet_retriever_fn.id
@@ -142,7 +142,7 @@ resource "oci_devops_deploy_stage" "cloudnative2021_tweetreportdigester_deploy_s
   docker_image_deploy_artifact_id = oci_devops_deploy_artifact.cloudnative2021_tweetreportdigester_deploy_ocir_artifact.id
 }
 
-resource "oci_devops_deployment" "test_deployment_run" {
+resource "oci_devops_deployment" "test_deployment_run_tweetretriever" {
   depends_on         = [null_resource.FnTweetRetrieverPush2OCIR, oci_devops_deploy_stage.cloudnative2021_tweetretriever_deploy_stage]
   deploy_pipeline_id = oci_devops_deploy_pipeline.cloudnative2021_tweetretriever_deploy_pipeline.id
   deployment_type    = "PIPELINE_DEPLOYMENT"

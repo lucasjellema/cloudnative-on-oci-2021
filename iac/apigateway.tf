@@ -130,16 +130,13 @@ data "oci_core_public_ips" "public_ips" {
     #Required
     compartment_id = var.compartment_ocid
     scope = "REGION"
-    # lifetime = "RESERVED"
+    lifetime = "RESERVED"
 
     
 }
 
 output "publicipaddress" { 
   value = local.public_ip[0].ip_address
-}
-output "publicipaddresses" { 
-  value = local.public_ip
 }
 
 locals {

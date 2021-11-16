@@ -11,12 +11,13 @@ TWITTER_CREDENTIALS_SECRET_OCID = OCID of the vault entry that contains the twit
 REGION = OCI region (such as us-ashburn-1)
 OCI_NAMESPACE = namespace of the object storage (environment)
 
-
+The format of the twitter credentials stored in the OCI Vault Secret:
+{'consumer_key': 'Zdyatq71A', 'consumer_secret':'oqp98263','access_token':'1781276*&','access_token_secret': 'Hallo91823612t'}
 
 
 ## technical notes
 the module is to be wrapped in an Fn Function to be deployed on OCI Functions platform
-when deployed as Function, the Function will benefit from a dynamic group policy on OCI to become Resource enabled (and get a generated private key and configuration file injected); when running stand alone, the module needs a stand alone OCI private key file and configuration file.
+when deployed as Function, the Function will benefit from a dynamic group policy on OCI to become Resource enabled (and get a generated private key and configuration file injected - read https://technology.amis.nl/oracle-cloud/oci-function-is-resource-principal-enabled-to-invoke-oci-services/ ); when running stand alone, the module needs a stand alone OCI private key file and configuration file.
 
 the module assumes it retrieves Twitter Client Credentials from an OCI Vault in the form of a secret. the module could also be allowed to use locally defined credentials.
 
@@ -29,10 +30,10 @@ Fn func =>  Tweet Summarizer  =>  OCI Object Storage
              Twitter     OCI Vault
 
 Note: environment details are not passed to the module as (functional) parameter, but instead through environment variables. Variables can be set for:
-- vault & secret:secret ocid
+- vault & secret:TWITTER_CREDENTIALS_SECRET_OCID
 - OCI authentication: OCI config & private key
-- OCI Object Storage: bucket, namespace (, compartment?)      
- Environment Variables: COMPARTMENT_OCID, SECRET_OCID, REGION, NAMESPACE  
+- OCI Object Storage: TWITTER_REPORTS_BUCKET, OCI_NAMESPACE (, COMPARTMENT_OCID)      
+ Environment Variables: COMPARTMENT_OCID, TWITTER_CREDENTIALS_SECRET_OCID, REGION, OCI_NAMESPACE  
 
 assumption:
 Function through a Dynamic Group benefit from policy that allows the dynamic group 

@@ -96,3 +96,31 @@ resource "oci_identity_policy" "faas_dg_policy" {
     command = "sleep 5"
   }
 }
+
+### Vault interactions
+
+resource "oci_identity_policy" "vault_functions_read_secrets_dg_policy" {   
+  depends_on     = [oci_identity_dynamic_group.faas_dg]
+  name           = "${var.app_name}-vault_functions_read_secrets_dg_policy"
+  description    = "${var.app_name}-vault_functions_read_secrets_dg_policy"
+  compartment_id = var.compartment_ocid
+  statements     = ["allow dynamic-group ${oci_identity_dynamic_group.faas_dg.name} to read secret-family in compartment id ${var.compartment_ocid}"]
+
+  provisioner "local-exec" {
+    command = "sleep 5"
+  }
+}
+
+# Create a policy that grants write access on objects in Object Storage in the compartment to all functions in that compartment :
+
+resource "oci_identity_policy" "objectstorage_functions_writeobjects_dg_policy" {   
+  depends_on     = [oci_identity_dynamic_group.faas_dg]
+  name           = "${var.app_name}-objectstorage_functions_writeobjects_dg_policy"
+  description    = "${var.app_name}-objectstorage_functions_writeobjects_dg_policy"
+  compartment_id = var.compartment_ocid
+  statements     = ["allow dynamic-group ${oci_identity_dynamic_group.faas_dg.name} to manage objects in compartment id ${var.compartment_ocid}"]
+
+  provisioner "local-exec" {
+    command = "sleep 5"
+  }
+}
