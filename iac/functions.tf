@@ -72,7 +72,7 @@ resource "null_resource" "FnTweetRetrieverPush2OCIR" {
   depends_on = [null_resource.Login2OCIR, oci_functions_application.cloudnative_2021_fn_app, oci_artifacts_container_repository.container_repository_functions_tweetretriever]
 
   provisioner "local-exec" {
-    command     = "image=$(docker images | grep ${local.app_name_lower} | awk -F ' ' '{print $3}') ; docker rmi -f $image &> /dev/null ; echo $image"
+    command     = "image=$(docker images | grep tweet_retriever | awk -F ' ' '{print $3}') ; docker rmi -f $image &> /dev/null ; echo $image"
     working_dir = "../functions/tweet-summarizer"
   }
 
@@ -82,7 +82,7 @@ resource "null_resource" "FnTweetRetrieverPush2OCIR" {
   }
 
   provisioner "local-exec" {
-    command     = "image=$(docker images | grep fake-fun | awk -F ' ' '{print $3}') ; docker tag $image ${local.ocir_docker_repository}/${local.ocir_namespace}/${var.ocir_repo_name}/tweet_retriever:${var.app_version}"
+    command     = "image=$(docker images | grep tweet_retriever | awk -F ' ' '{print $3}') ; docker tag $image ${local.ocir_docker_repository}/${local.ocir_namespace}/${var.ocir_repo_name}/tweet_retriever:${var.app_version}"
     working_dir = "../functions/tweet-summarizer"
   }
 
