@@ -42,7 +42,7 @@ resource oci_apigateway_gateway cloudnative-2021-apigateway {
 
 
 resource oci_apigateway_deployment apigw-deployment_cloudnative-2021 {
- depends_on = [oci_apigateway_gateway.cloudnative-2021-apigateway   ]
+ depends_on = [oci_apigateway_gateway.cloudnative-2021-apigateway , oci_functions_function.tweet_retriever_fn  ]
   compartment_id = var.compartment_ocid
   display_name = "cloudnative-2021"
   freeform_tags = {
@@ -84,6 +84,26 @@ resource oci_apigateway_deployment apigw-deployment_cloudnative-2021 {
       response_policies {
       }
     }
+    routes {
+      backend {
+        function_id = oci_functions_function.tweet_retriever_fn.id
+        type = "ORACLE_FUNCTIONS_BACKEND"
+      }
+      logging_policies {
+        execution_log {
+          log_level = ""
+        }
+      }
+      methods = [
+        "GET",
+      ]
+      path = "/retrieve-tweets"
+      request_policies {
+      }
+      response_policies {
+      }
+    }
+
   }
 }
 
@@ -123,6 +143,5 @@ output "publicipaddress2" {
 }
 
 locals {
-  app_name_lower = lower(var.app_name)
   public_ip =  data.oci_core_public_ips.public_ips.public_ips
 }

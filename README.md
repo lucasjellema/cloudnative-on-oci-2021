@@ -5,21 +5,24 @@ Resources for the Cloud Native on OCI demonstrations (end of 2021)
 ## Installation of Infra and Application on OCI
 
 Prepare:
-* create compartment in OCI (or empty existing compartment)
+* create compartment in OCI (or empty existing compartment for reuse)
 * run VCN networking wizard to create a VCN with Internet Connectivity (https://console.us-ashburn-1.oraclecloud.com/networking/solutions/vcn)
-* TODO: add security rules in list for inbound HTTP(S) traffic (to API Gateway) 
-* start an environment and make sure Terraform can be used in it (see below for setting up Terraform) and that the Fn client is available (see below)
+
+* either use OCI CloudShell 
+* or start an environment and make sure Terraform can be used in it (see below for setting up Terraform) and that the Fn client is available (see below)
 * git clone this repository: git clone https://github.com/lucasjellema/cloudnative-on-oci-2021
-* edit files .oci/config and .oci/oci_api_key.pem to contain proper values
-* copy directory .oci to ~/.oci  (cp -r .oci ~)
-* edit file variables.tf in directory /iac
+* when not in CloudShell: 
+  * edit files .oci/config and .oci/oci_api_key.pem to contain proper values
+  * copy directory .oci to ~/.oci  (cp -r .oci ~)
+
+* edit file variables.tf in directory /iac (for example to * specify the target compartment's OCID to have resources created in proper compartment)
+
 * initialize terraform: execute `terraform init` in the /iac subdirectory in the cloned repository
 
 Steps:
-* specify the target compartment's OCID to have resources created in proper compartment
 * run Infrastructure as Code Terraform scripts to create OCI resources: (in /iac) terraform apply
 * try (from Postman) the ping API on the API Gateway: https://152.70.199.164/cn2021/ping  (replace with the public ip address assigned to the Internet Gateway)
-* define dynamic groups & dynamic group policies (to provide permissions to functions) - see https://github.com/oracle-quickstart/oci-arch-devops/blob/master/devops_function/functions-policies.tf 
+
 * define Function Application configuration (to provide settings to functions)
 * define Vault Secrets (to provide sensitive settings to functions, such as Twitter credentials)
 * build functions (to container images) and deploy functions (from container images) (ideally using OCI DevOps Build Pipeline and Deployment Pipeline) 
