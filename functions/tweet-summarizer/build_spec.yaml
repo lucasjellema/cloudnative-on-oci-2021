@@ -25,7 +25,7 @@ steps:
       export BUILDRUN_HASH=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
       echo "BUILDRUN_HASH: " $BUILDRUN_HASH
       echo "FUNCTION-DIRECTORY: " $FUNCTION_DIRECTORY
-      onFailure:
+    onFailure:
       - type: Command
         timeoutInSeconds: 40
         command: |
