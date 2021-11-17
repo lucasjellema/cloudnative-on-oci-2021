@@ -28,7 +28,13 @@ steps:
       echo "current directory:"  
       pwd
       ls
-    onFailure:
+      echo "goto OCI_WORKSPACE_DIR"
+      cd ${OCI_WORKSPACE_DIR}
+      pwd
+      echo "goto" ${OCI_WORKSPACE_DIR} ${FUNCTION_DIRECTORY}
+      cd ${OCI_WORKSPACE_DIR}/${FUNCTION_DIRECTORY}
+      pwd
+      onFailure:
       - type: Command
         timeoutInSeconds: 40
         command: |
@@ -42,6 +48,8 @@ steps:
     name: "Install Prereqs"
     command: |
       cd ${OCI_WORKSPACE_DIR}/${FUNCTION_DIRECTORY}
+      echo go install NVM
+      pwd
       # install nvm
       curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0/install.sh | bash
       export NVM_DIR="$HOME/.nvm"
