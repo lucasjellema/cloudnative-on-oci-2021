@@ -6,6 +6,13 @@ resource "oci_identity_dynamic_group" "devops_pipln_dg" {
   matching_rule  = "All {resource.type = 'devopsdeploypipeline', resource.compartment.id = '${var.compartment_ocid}'}"
 }
 
+resource "oci_identity_dynamic_group" "cloudnative2021-devops_coderepositories" {
+  compartment_id = var.tenancy_ocid
+  name           = "cloudnative2021-devops_coderepositories-dg"
+  description    = "cloudnative2021-devops_coderepositories-dg DevOps Code Repositories Dynamic Group"
+  matching_rule  = "All {resource.type = 'devopsrepository', resource.compartment.id = '${var.compartment_ocid}'}"
+}
+
 resource "oci_identity_policy" "devops_compartment_policies" {
   depends_on  = [oci_identity_dynamic_group.devops_pipln_dg]
   name        = "${var.app_name}-devops-compartment-policies"
@@ -121,6 +128,19 @@ resource "oci_identity_policy" "vault_functions_read_secrets_dg_policy" {
   compartment_id = var.compartment_ocid
   statements     = ["allow dynamic-group ${oci_identity_dynamic_group.faas_dg.name} to read secret-family in compartment id ${var.compartment_ocid}"]
 
+  provisioner "local-exec" {
+    command = "sleep 5"
+  }
+}
+
+# according to docs, the read secrets should be granted to devopsconnection; however, that does not work : it works for coderepositories (https://docs.public.oneportal.content.oci.oraclecloud.com/en-us/iaas/Content/devops/using/devops_policy_examples.htm) 
+
+resource "oci_identity_policy" "vault_devops_coderepos_read_secrets_policy" {     
+  depends_on     = [oci_identity_dynamic_group.cloudnative2021-devops_coderepositories]
+  name           = "vault_devops_read_secrets_policy"
+  description    = "vault_devops_read_secrets_policy"
+  compartment_id = var.compartment_ocid
+  statements     = ["allow dynamic-group ${oci_identity_dynamic_group.cloudnative2021-devops_coderepositories.name} to read secret-family in compartment id ${var.compartment_ocid}"]
   provisioner "local-exec" {
     command = "sleep 5"
   }

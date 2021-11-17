@@ -148,3 +148,29 @@ resource "oci_devops_deployment" "test_deployment_run_tweetretriever" {
   deployment_type    = "PIPELINE_DEPLOYMENT"
   display_name       = "${var.app_name}_tweetretriever_${random_string.deploy_id.result}_devops_deployment"
 }
+
+
+# Code Repository
+# note: oci devops needs to be able to access Vault
+
+resource "oci_devops_repository" "cloudnative-2021-on-oci-repo" {
+    #Required
+    name = "cloudnative-2021-on-oci-repo"
+    project_id = oci_devops_project.cloudnative2021_project.id
+
+    #Optional
+    default_branch = var.repository_default_branch
+    description = "Code Repository mirrored from GitHub https://github.com/lucasjellema/cloudnative-on-oci-2021"
+    mirror_repository_config {
+
+        #Optional
+        connector_id = "ocid1.devopsconnection.oc1.iad.amaaaaaa6sde7caakfpkekt32pncurgkn37vxe3fwp2fllguo43b4iozcwnq"
+        repository_url = "https://github.com/lucasjellema/cloudnative-on-oci-2021"
+        trigger_schedule {
+            #Required
+            schedule_type = "DEFAULT"
+
+        }
+    }
+    repository_type = "MIRRORED"
+}
