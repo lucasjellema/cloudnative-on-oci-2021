@@ -6,7 +6,7 @@ shell: bash
 env:
   # these are local variables to the build config
   variables:
-     FUNCTION_DIRECTORY: "functions/tweet-retriever"
+     FUNCTION_DIRECTORY: "tweet_retriever_source/functions/tweet-retriever"
   # # the value of a vaultVariable is the secret-id (in OCI ID format) stored in the OCI Vault service
   # you can then access the value of that secret in your build_spec.yaml commands
   vaultVariables:
@@ -24,8 +24,10 @@ steps:
     command: |
       export BUILDRUN_HASH=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
       echo "BUILDRUN_HASH: " $BUILDRUN_HASH
+      echo "FUNCTION-DIRECTORY: " $FUNCTION_DIRECTORY
       echo "current directory:"  
       pwd
+      ls
     onFailure:
       - type: Command
         timeoutInSeconds: 40
