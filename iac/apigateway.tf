@@ -27,14 +27,6 @@ resource oci_apigateway_gateway cloudnative-2021-apigateway {
   network_security_group_ids = [
   ]
   response_cache_details {
-    #authentication_secret_id = <<Optional value not found in discovery>>
-    #authentication_secret_version_number = <<Optional value not found in discovery>>
-    #connect_timeout_in_ms = <<Optional value not found in discovery>>
-    #is_ssl_enabled = <<Optional value not found in discovery>>
-    #is_ssl_verify_disabled = <<Optional value not found in discovery>>
-    #read_timeout_in_ms = <<Optional value not found in discovery>>
-    #send_timeout_in_ms = <<Optional value not found in discovery>>
-    #servers = <<Optional value not found in discovery>>
     type = "NONE"
   }
   subnet_id = local.publicsubnet.id
@@ -142,3 +134,68 @@ output "publicipaddress" {
 locals {
   public_ip =  data.oci_core_public_ips.public_ips.public_ips
 }
+
+
+# logging
+
+resource oci_logging_log_group cloudnative-2021_log_group {
+  compartment_id = var.compartment_ocid
+  display_name = "cloudnative-2021_log_group"
+  freeform_tags = {
+  }
+}
+
+resource oci_logging_log apigateway_cloudnative_2021_access {
+  configuration {
+    compartment_id = var.compartment_ocid
+    source {
+      category    = "access"
+      resource    = oci_apigateway_deployment.apigw-deployment_cloudnative-2021.id
+      service     = "apigateway"
+      source_type = "OCISERVICE"
+    }
+  }
+  display_name = "cloudnative_2021_access"
+  is_enabled         = "true"
+  log_group_id       = oci_logging_log_group.cloudnative-2021_log_group.id
+  log_type           = "SERVICE"
+  retention_duration = "30"
+}
+
+resource oci_logging_log apigateway_cloudnative_2021_execution {
+  configuration {
+    compartment_id = var.compartment_ocid
+    source {
+      category    = "execution"
+      resource    = oci_apigateway_deployment.apigw-deployment_cloudnative-2021.id
+      service     = "apigateway"
+      source_type = "OCISERVICE"
+    }
+  }
+  display_name = "cloudnative_2021_execution"
+  freeform_tags = {
+  }
+  is_enabled         = "true"
+  log_group_id       = oci_logging_log_group.cloudnative-2021_log_group.id
+  log_type           = "SERVICE"
+  retention_duration = "30"
+}
+
+resource oci_logging_log Function_cloudnative_2021App_invoke {
+  configuration {
+    compartment_id = var.compartment_ocid
+    source {
+      category    = "invoke"
+      resource    = "ocid1.fnapp.oc1.iad.aaaaaaaak5k4vwkjl3efqrb2m2vamia4vmsptrlw2k6z4sbhvcqiranxvtbq"
+      service     = "functions"
+      source_type = "OCISERVICE"
+    }
+  }
+  display_name = "cloudnative_2021App_invoke"
+  is_enabled         = "true"
+  log_group_id       = oci_logging_log_group.cloudnative-2021_log_group.id
+  log_type           = "SERVICE"
+  retention_duration = "30"
+}
+
+

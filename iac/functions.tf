@@ -27,7 +27,10 @@ resource "oci_functions_application" "cloudnative_2021_fn_app" {
   compartment_id = var.compartment_ocid
   display_name   = "${var.app_name}App"
   subnet_ids     = [local.publicsubnet.id]
-  config = { \"REGION\"=\"${var.region}\", \"COMPARTMENT_OCID\"=\"${var.compartment_ocid}\"}
+  config = tomap({
+    REGION = "${var.region}"
+    COMPARTMENT_OCID = "${var.compartment_ocid}"
+  })
 }
 
 
@@ -100,8 +103,11 @@ resource "oci_functions_function" "tweet_retriever_fn" {
   display_name   = "tweet_retriever"
   image          = "${local.ocir_docker_repository}/${local.ocir_namespace}/${var.ocir_repo_name}/fake-fun:${var.app_version}"
   memory_in_mbs  = "256"
-    config = {\"TWITTER_REPORTS_BUCKET\"=\"${var.bucket_name}\", \"TWITTER_CREDENTIALS_SECRET_OCID\"=\"please provide\", \"OCI_NAMESPACE\"=\"${local.ocir_namespace}\"}
-
+  config = tomap({
+    TWITTER_REPORTS_BUCKET = "${var.bucket_name}"
+    TWITTER_CREDENTIALS_SECRET_OCID = "please provide"
+    OCI_NAMESPACE = "${local.ocir_namespace}"
+  })
 }
 
 resource "oci_functions_function" "tweet_report_digester_fn" {

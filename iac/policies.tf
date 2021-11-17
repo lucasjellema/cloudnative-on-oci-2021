@@ -97,6 +97,21 @@ resource "oci_identity_policy" "faas_dg_policy" {
   }
 }
 
+
+### API Gateway - permission to invoke functions
+
+resource "oci_identity_policy" "apigateway-invoke-functions-policy" {
+   
+  depends_on     = [oci_identity_dynamic_group.faas_dg]
+  name           = "apigateway-invoke-functions-policy"
+  description    = "apigateway-invoke-functions-policy"
+  compartment_id = var.compartment_ocid
+  statements     = ["ALLOW any-user to use functions-family in compartment id ${var.compartment_ocid} where ALL {request.principal.type= 'ApiGateway', request.resource.compartment.id = '${var.compartment_ocid}'}"]
+  provisioner "local-exec" {
+    command = "sleep 5"
+  }
+}
+
 ### Vault interactions
 
 resource "oci_identity_policy" "vault_functions_read_secrets_dg_policy" {   
