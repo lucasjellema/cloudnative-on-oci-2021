@@ -25,15 +25,6 @@ steps:
       export BUILDRUN_HASH=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
       echo "BUILDRUN_HASH: " $BUILDRUN_HASH
       echo "FUNCTION-DIRECTORY: " $FUNCTION_DIRECTORY
-      echo "current directory:"  
-      pwd
-      ls
-      echo "goto OCI_WORKSPACE_DIR"
-      cd ${OCI_WORKSPACE_DIR}
-      pwd
-      echo "goto" ${OCI_WORKSPACE_DIR} ${FUNCTION_DIRECTORY}
-      cd ${OCI_WORKSPACE_DIR}/${FUNCTION_DIRECTORY}
-      pwd
       onFailure:
       - type: Command
         timeoutInSeconds: 40
