@@ -140,7 +140,7 @@ locals {
 
 resource oci_logging_log_group cloudnative-2021_log_group {
   compartment_id = var.compartment_ocid
-  display_name = "cloudnative-2021_log_group"
+  display_name = "cloudnative-2021_logging_group"
   freeform_tags = {
   }
 }
