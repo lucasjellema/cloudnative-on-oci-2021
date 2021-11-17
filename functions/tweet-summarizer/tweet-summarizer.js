@@ -23,7 +23,7 @@ const aggregateTweets = async function (hashtag, minutes = 5) {
 
     return {
         "request": { "hashtag": hashtag, "minutes": minutes },
-        "result": { "numberOfTweets": tweetsRetrieved.length, "fileName": objectName }
+        "result": { "numberOfTweets": tweetsRetrieved.length, "fileName": objectName,"message":"hello from the other side" }
     }
 }
 
