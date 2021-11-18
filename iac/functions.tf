@@ -69,6 +69,7 @@ resource "null_resource" "FnPush2OCIR" {
     command     = "docker push ${local.ocir_docker_repository}/${local.ocir_namespace}/${var.ocir_repo_name}/fake-fun:${var.app_version}"
     working_dir = "../functions/fake-fun"
   }
+
 }
 
 
@@ -117,8 +118,8 @@ resource "oci_functions_function" "tweet_report_digester_fn" {
   image          = "${local.ocir_docker_repository}/${local.ocir_namespace}/${var.ocir_repo_name}/fake-fun:${var.app_version}"
   memory_in_mbs  = "256"
   config = tomap({
-    STREAM_OCID = "provide Stream OCID"
-    TABLE_OCID = "provide NoSQL Table OCID"
+    STREAM_OCID = "${oci_streaming_stream.cloudnative-2021-tweet-stream.id}"
+    TABLE_OCID = "${oci_nosql_table.nosql_TWEETS_TABLE.id}"
   })
 }
 

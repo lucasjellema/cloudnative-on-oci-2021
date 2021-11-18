@@ -18,3 +18,14 @@ depends_on     = [oci_ons_notification_topic.cloudnative2021_twitter_report_aler
   display_name = "TWITTER_REPORT_EVENTS"
   is_enabled = "true"
 }
+
+
+resource oci_ons_subscription export_subscription_1 {
+  compartment_id = var.compartment_ocid
+  delivery_policy = "{\"backoffRetryPolicy\":{\"maxRetryDuration\":7200000,\"policyType\":\"EXPONENTIAL\"}}"
+  endpoint        = "${oci_functions_function.tweet_report_digester_fn.id}"
+  freeform_tags = {
+  }
+  protocol = "ORACLE_FUNCTIONS"
+  topic_id = oci_ons_notification_topic.cloudnative2021_twitter_report_alerts_topic.id
+}
