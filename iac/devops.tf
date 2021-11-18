@@ -339,3 +339,48 @@ resource oci_devops_build_pipeline_stage build-stage-tweet-report-digester-funct
 }
 
 ### trigger build pipeline from commit/push in code Repository
+
+
+resource oci_devops_trigger coderepos_trigger_tweet_report_digester_build {
+  actions {
+    build_pipeline_id = oci_devops_build_pipeline.cloudnative2021_buildpipeline_tweet-report-digester-function.id
+    filter {
+      events = [
+        "PUSH",
+      ]
+      #include = <<Optional value not found in discovery>>
+      trigger_source = "DEVOPS_CODE_REPOSITORY"
+    }
+    type = "TRIGGER_BUILD_PIPELINE"
+  }
+
+  description  = "trigger build pipeline for tweet_report_digester when a push has processed commit(s) against the code repository  "
+  display_name = "trigger_tweet_report_digester_build"
+
+  project_id     = oci_devops_project.cloudnative2021_project.id
+  repository_id  = oci_devops_repository.cloudnative-2021-on-oci-repo.id
+  trigger_source = "DEVOPS_CODE_REPOSITORY"
+
+}
+
+resource oci_devops_trigger coderepos_trigger-tweet-retriever-build {
+  actions {
+    build_pipeline_id = oci_devops_build_pipeline.cloudnative2021_buildpipeline_tweet-retriever-function.id
+    filter {
+      events = [
+        "PUSH",
+      ]
+      #include = <<Optional value not found in discovery>>
+      trigger_source = "DEVOPS_CODE_REPOSITORY"
+    }
+    type = "TRIGGER_BUILD_PIPELINE"
+  }
+
+  description  = ""
+  display_name = "trigger-tweet-retriever-build"
+
+  project_id     = oci_devops_project.cloudnative2021_project.id
+  repository_id  = oci_devops_repository.cloudnative-2021-on-oci-repo.id
+  trigger_source = "DEVOPS_CODE_REPOSITORY"
+}
+
