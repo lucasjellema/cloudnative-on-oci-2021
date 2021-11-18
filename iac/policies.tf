@@ -200,8 +200,6 @@ resource "oci_identity_policy" "nosql_functions_create_records_dg_policy" {
 }
 
 # Create a policy that grants publish to Stream  to all functions in that compartment :
-oci iam policy create  --name "publish-stream-permissions-for-resource-principal-enabled-functions-in-lab-compartment" --compartment-id $compartmentId  --statements "[ \"allow dynamic-group functions-in-lab-compartment
- to use stream-push  in compartment lab-compartment\" ]" --description "to allow functions in lab-compartment to push messages to streams"
 
 
 resource "oci_identity_policy" "streaming_functions_publish_dg_policy" {   
