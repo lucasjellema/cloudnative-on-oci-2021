@@ -66,6 +66,17 @@ resource "oci_devops_deploy_artifact" "cloudnative2021_tweetretriever_deploy_oci
   }
 }
 
+resource "oci_devops_deploy_artifact" "cloudnative2021_fakefun_deploy_ocir_artifact" {
+  depends_on                 = [null_resource.FnPush2OCIR]
+  project_id                 = oci_devops_project.cloudnative2021_project.id
+  deploy_artifact_type       = "DOCKER_IMAGE"
+  argument_substitution_mode = "NONE"
+  deploy_artifact_source {
+    deploy_artifact_source_type = "OCIR"
+    image_uri                   = "${local.ocir_docker_repository}/${local.ocir_namespace}/${var.ocir_repo_name}/fake-fun:0.0.1"
+  }
+}
+
 resource "oci_devops_deploy_artifact" "cloudnative2021_tweetreportdigester_deploy_ocir_artifact" {
   depends_on                 = [null_resource.FnPush2OCIR]
   project_id                 = oci_devops_project.cloudnative2021_project.id
@@ -160,12 +171,11 @@ resource "oci_devops_repository" "cloudnative-2021-on-oci-repo" {
     project_id = oci_devops_project.cloudnative2021_project.id
 
     #Optional
-    default_branch = var.repository_default_branch
     description = "Code Repository mirrored from GitHub https://github.com/lucasjellema/cloudnative-on-oci-2021"
     mirror_repository_config {
 
         #Optional
-        connector_id = oci_devops_connection devops_externalconnection_github-lucasjellema.id
+        connector_id = oci_devops_connection.devops_externalconnection_github-lucasjellema.id
         repository_url = "https://github.com/lucasjellema/cloudnative-on-oci-2021"
         trigger_schedule {
             #Required
@@ -275,7 +285,7 @@ resource oci_devops_build_pipeline_stage build-stage_trigger-tweet-report-digest
     }
   }
   build_pipeline_stage_type = "TRIGGER_DEPLOYMENT_PIPELINE"
-  deploy_pipeline_id = oci_devops_deploy_pipeline.cloudnative2021_tweetreportdigester_deploy_pipeline.id.id
+  deploy_pipeline_id = oci_devops_deploy_pipeline.cloudnative2021_tweetreportdigester_deploy_pipeline.id
   description        = "Trigger Deployment Pipeline for Function Tweet Report Digester"
   display_name       = "trigger-tweet-report-digester-deployment-pipeline"
   is_pass_all_parameters_enabled = "true"
