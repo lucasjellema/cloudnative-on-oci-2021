@@ -338,3 +338,4 @@ resource oci_devops_build_pipeline_stage build-stage-tweet-report-digester-funct
   stage_execution_timeout_in_seconds = "36000"
 }
 
+### trigger build pipeline from commit/push in code Repository
