@@ -99,6 +99,34 @@ resource "null_resource" "FnTweetRetrieverPush2OCIR" {
 
 }
 
+
+# for now build Function Container Image from Terraform; later on use build pipeline for this
+resource "null_resource" "FnTweetReportDigesterPush2OCIR" {
+  depends_on = [null_resource.Login2OCIR, oci_functions_application.cloudnative_2021_fn_app, oci_artifacts_container_repository.container_repository_functions_tweetreportdigester]
+
+  provisioner "local-exec" {
+    command     = "image=$(docker images | grep tweet_report_digester | awk -F ' ' '{print $3}') ; docker rmi -f $image &> /dev/null ; echo $image"
+    working_dir = "../functions/tweet-report-digester"
+  }
+
+  provisioner "local-exec" {
+    command     = "fn build --verbose"
+    working_dir = "../functions/tweet-report-digester"
+  }
+
+  provisioner "local-exec" {
+    command     = "image=$(docker images | grep tweet_report_digester | awk -F ' ' '{print $3}') ; docker tag $image ${local.ocir_docker_repository}/${local.ocir_namespace}/${var.ocir_repo_name}/tweet_report_digester:${var.app_version}"
+    working_dir = "../functions/tweet-report-digester"
+  }
+
+  provisioner "local-exec" {
+    command     = "docker push ${local.ocir_docker_repository}/${local.ocir_namespace}/${var.ocir_repo_name}/tweet_report_digester:${var.app_version}"
+    working_dir = "../functions/tweet-report-digester"
+  }
+
+}
+
+
 resource "oci_functions_function" "tweet_retriever_fn" {
   depends_on     = [null_resource.FnPush2OCIR]
   application_id = oci_functions_application.cloudnative_2021_fn_app.id

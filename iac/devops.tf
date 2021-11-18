@@ -78,7 +78,7 @@ resource "oci_devops_deploy_artifact" "cloudnative2021_fakefun_deploy_ocir_artif
 }
 
 resource "oci_devops_deploy_artifact" "cloudnative2021_tweetreportdigester_deploy_ocir_artifact" {
-  depends_on                 = [null_resource.FnPush2OCIR]
+  depends_on                 = [null_resource.FnTweetReportDigesterPush2OCIR]
   project_id                 = oci_devops_project.cloudnative2021_project.id
   deploy_artifact_type       = "DOCKER_IMAGE"
   argument_substitution_mode = "NONE"
