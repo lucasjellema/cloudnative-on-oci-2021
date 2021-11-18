@@ -30,6 +30,7 @@ resource "oci_functions_application" "cloudnative_2021_fn_app" {
   config = tomap({
     REGION = "${var.region}"
     COMPARTMENT_OCID = "${var.compartment_ocid}"
+    TWITTER_REPORTS_BUCKET = "${var.bucket_name}"
   })
 }
 
@@ -104,7 +105,6 @@ resource "oci_functions_function" "tweet_retriever_fn" {
   image          = "${local.ocir_docker_repository}/${local.ocir_namespace}/${var.ocir_repo_name}/fake-fun:${var.app_version}"
   memory_in_mbs  = "256"
   config = tomap({
-    TWITTER_REPORTS_BUCKET = "${var.bucket_name}"
     TWITTER_CREDENTIALS_SECRET_OCID = "please provide"
     OCI_NAMESPACE = "${local.ocir_namespace}"
   })
@@ -116,6 +116,10 @@ resource "oci_functions_function" "tweet_report_digester_fn" {
   display_name   = "tweet_report_digester"
   image          = "${local.ocir_docker_repository}/${local.ocir_namespace}/${var.ocir_repo_name}/fake-fun:${var.app_version}"
   memory_in_mbs  = "256"
+  config = tomap({
+    STREAM_OCID = "provide Stream OCID"
+    TABLE_OCID = "provide NoSQL Table OCID"
+  })
 }
 
 

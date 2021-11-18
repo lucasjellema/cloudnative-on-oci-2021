@@ -183,3 +183,35 @@ resource "oci_identity_policy" "objectstorage_functions_writeobjects_dg_policy" 
     command = "sleep 5"
   }
 }
+
+
+# Create a policy that grants create record in NoSQL Database in the compartment to all functions in that compartment :
+
+resource "oci_identity_policy" "nosql_functions_create_records_dg_policy" {   
+  depends_on     = [oci_identity_dynamic_group.faas_dg]
+  name           = "${var.app_name}-nosql_functions_createrecords_dg_policy"
+  description    = "${var.app_name}-nosql_functions_createrecords_dg_policy"
+  compartment_id = var.compartment_ocid
+  statements     = ["allow dynamic-group ${oci_identity_dynamic_group.faas_dg.name} to use nosql-rows in compartment id ${var.compartment_ocid}"]
+
+  provisioner "local-exec" {
+    command = "sleep 5"
+  }
+}
+
+# Create a policy that grants publish to Stream  to all functions in that compartment :
+oci iam policy create  --name "publish-stream-permissions-for-resource-principal-enabled-functions-in-lab-compartment" --compartment-id $compartmentId  --statements "[ \"allow dynamic-group functions-in-lab-compartment
+ to use stream-push  in compartment lab-compartment\" ]" --description "to allow functions in lab-compartment to push messages to streams"
+
+
+resource "oci_identity_policy" "streaming_functions_publish_dg_policy" {   
+  depends_on     = [oci_identity_dynamic_group.faas_dg]
+  name           = "${var.app_name}-streaming_functions_push_dg_policy"
+  description    = "${var.app_name}-streaming_functions_push_dg_policy"
+  compartment_id = var.compartment_ocid
+  statements     = ["allow dynamic-group ${oci_identity_dynamic_group.faas_dg.name} to use stream-push in compartment id ${var.compartment_ocid}"]
+
+  provisioner "local-exec" {
+    command = "sleep 5"
+  }
+}
