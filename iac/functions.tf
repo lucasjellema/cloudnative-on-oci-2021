@@ -31,6 +31,7 @@ resource "oci_functions_application" "cloudnative_2021_fn_app" {
     REGION = "${var.region}"
     COMPARTMENT_OCID = "${var.compartment_ocid}"
     TWITTER_REPORTS_BUCKET = "${var.bucket_name}"
+    OCI_NAMESPACE = "${local.ocir_namespace}"
   })
 }
 
@@ -135,7 +136,6 @@ resource "oci_functions_function" "tweet_retriever_fn" {
   memory_in_mbs  = "256"
   config = tomap({
     TWITTER_CREDENTIALS_SECRET_OCID = "please provide"
-    OCI_NAMESPACE = "${local.ocir_namespace}"
   })
 }
 
