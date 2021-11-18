@@ -55,7 +55,6 @@ function signRequest(request, body = "") {
 
 
     let resourcePrincipalEnabled = process.env.OCI_RESOURCE_PRINCIPAL_RPST != null
-    console.info(`Resource Principal Enabled = ${resourcePrincipalEnabled}`)
     if (resourcePrincipalEnabled) {
         const sessionTokenFilePath = process.env.OCI_RESOURCE_PRINCIPAL_RPST
         const rpst = fs.readFileSync(sessionTokenFilePath, { encoding: 'utf8' })
