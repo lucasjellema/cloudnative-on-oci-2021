@@ -1,0 +1,144 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "OCI and Infrastructure as Code",
+  "steps": [
+    {
+      "file": "iac/provider.tf",
+      "description": "The Platform and Infrastructure as Code is implemented using Terraform and the OCI Provider for Terraform. This provider is defined here. It uses the local /.oci/config file to get access to an OCI environment and user account. In Cloudshell, this configuration is already available. \r\n\r\nNote: it is assumed that the Terraform plans are applied in the context of a compartment that already contains a VCN - created for example by running the VCN wizard in the OCI Console.\r\n\r\nTo apply the Terraform plans, change into the `iac` directory and run `terraform apply`. To remove all resources created from these plans, run `terraform destroy`.",
+      "line": 20,
+      "selection": {
+        "start": {
+          "line": 19,
+          "character": 1
+        },
+        "end": {
+          "line": 22,
+          "character": 2
+        }
+      }
+    },
+    {
+      "file": "iac/variables.tf",
+      "selection": {
+        "start": {
+          "line": 1,
+          "character": 1
+        },
+        "end": {
+          "line": 14,
+          "character": 2
+        }
+      },
+      "description": "these variables are used throughout the Terraform plans and should be set before applying the plans."
+    },
+    {
+      "file": "iac/datasources.tf",
+      "description": "This file defines a number of data sources - queries against the OCI tenancy and compartment that expose specific details from the OCI context. References to these data sources are used throughout the Terraform plans.",
+      "line": 1
+    },
+    {
+      "file": "iac/policies.tf",
+      "description": "This plan defines Dynamic Groups - virtual resource principals from resources that comply with specific rules - for Functions, Code Repositories, Deployment Pipelines and more. Identity policies are defined that grant permissions to these dynamic groups. Note that some these policies are defined fairly widely (more permissions than are strictly required).   ",
+      "line": 1
+    },
+    {
+      "file": "iac/apigateway.tf",
+      "description": "This data source retrieves the public ip address for the VCN. It seems that this information is only available/stable after the security list has been extended for the inbound https traffic - hence the depends_on attribute. ",
+      "line": 121
+    },
+    {
+      "file": "iac/apigateway.tf",
+      "description": "As an example: here an API Gateway resource is defined. Its subnet_id is set using the local variable `local.publicsubnet.id`, its compartment_id is set from a variable (defined in `variables.tf` - as discussed in [Step 2][#2]). ",
+      "line": 10
+    },
+    {
+      "file": "iac/apigateway.tf",
+      "description": "Once both the API Gateway and the Tweet Retriever Function has been created, an API Deployment is created on the API Gateway. This deployment has routes for a simple ping (/cn2021/ping - GET)(returning stock response) and the Tweet Retriever Function (/cn2021/retrieve-tweets - GET). ",
+      "line": 26
+    },
+    {
+      "file": "iac/apigateway.tf",
+      "description": "In order to allow HTTPS traffic from external origins into the VCN (and to the API Gateway) we extend the security list with this rule.",
+      "line": 92
+    },
+    {
+      "file": "iac/apigateway.tf",
+      "description": "Define the logging log and logging policies for the API Gateway.",
+      "line": 132,
+      "selection": {
+        "start": {
+          "line": 132,
+          "character": 1
+        },
+        "end": {
+          "line": 173,
+          "character": 2
+        }
+      }
+    },
+    {
+      "file": "iac/functions.tf",
+      "description": "Three containers are created in the Container Image Registry- one for each of the two \"real\" functions and one for a fake function that can be used as a standin whenever a function image is needed but a real one is not yet available.",
+      "line": 2,
+      "selection": {
+        "start": {
+          "line": 2,
+          "character": 1
+        },
+        "end": {
+          "line": 24,
+          "character": 2
+        }
+      }
+    },
+    {
+      "file": "iac/functions.tf",
+      "selection": {
+        "start": {
+          "line": 37,
+          "character": 1
+        },
+        "end": {
+          "line": 71,
+          "character": 2
+        }
+      },
+      "description": "These steps login to the Container Registry (using the connection details defined in [variables.tf](./iac/variables.tf)) and then build the Fn container image for the fake-fun function, using the sources in directory /functions/fake-fun and push the resulting image to the OCIR. It then becomes available as the foundation for a Function. "
+    },
+    {
+      "file": "iac/functions.tf",
+      "description": "Function tweet_report_digester is created into the Function Application - based on the container image that was built and pushed in the previous step.  ",
+      "line": 119,
+      "selection": {
+        "start": {
+          "line": 113,
+          "character": 1
+        },
+        "end": {
+          "line": 119,
+          "character": 2
+        }
+      }
+    },
+    {
+      "file": "iac/notification.tf",
+      "description": "Once the Notification Topic TWITTER_REPORT_ALERT has been created, an event rule is defined that ensures events are published to the Notification topic when new documents are created in the Object Storage Bucket created in [storage.tf](./iac/storage.tf).",
+      "line": 20,
+      "selection": {
+        "start": {
+          "line": 1,
+          "character": 1
+        },
+        "end": {
+          "line": 20,
+          "character": 2
+        }
+      }
+    },
+    {
+      "title": "Conclusion",
+      "description": "Once the infrastructure and platform cloud resources have all been set up, we need to manually define secrets in a Vault: the Twitter credentials (and set the OCID of that secret as one of the configuration parameters for function tweet_retriever) and the GitHub personal access token to access the GitHub repository that the code repository should be mirrored from (see [devops.tf](/iac/devops.tf) "
+    }
+  ],
+  "ref": "main"
+}

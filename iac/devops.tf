@@ -174,3 +174,85 @@ resource "oci_devops_repository" "cloudnative-2021-on-oci-repo" {
     }
     repository_type = "MIRRORED"
 }
+
+resource oci_devops_build_pipeline cloudnative2021_buildpipeline_tweet-retriever-function {
+  build_pipeline_parameters {
+  }
+
+  description  = ""
+  display_name = "build_tweet-retriever-function"
+  freeform_tags = {
+  }
+  project_id = oci_devops_project.cloudnative2021_project.id
+}
+
+
+resource oci_devops_connection devops_externalconnection_github-lucasjellema {
+  ## GitHub Personal Access Token is stored in Vault Secret with this OCID
+  access_token    = "ocid1.vaultsecret.oc1.iad.amaaaaaa6sde7caax4fycl23zwgww24twfzq7cmo4ahb6yghiqhr5ergxhpq"
+  connection_type = "GITHUB_ACCESS_TOKEN"
+  description  = "Connection to GitHub Repositories in lucasjellema account"
+  display_name = "github-lucasjellema"
+  project_id = oci_devops_project.cloudnative2021_project.id
+}
+
+resource oci_devops_build_pipeline_stage build-stage_trigger-tweet-retriever-deployment-pipeline {
+  build_pipeline_id = oci_devops_build_pipeline.cloudnative2021_buildpipeline_tweet-retriever-function.id
+  build_pipeline_stage_predecessor_collection {
+    items {
+      id = oci_devops_build_pipeline_stage.build-stage-push-function-container-image-to-registry.id
+    }
+  }
+  build_pipeline_stage_type = "TRIGGER_DEPLOYMENT_PIPELINE"
+  deploy_pipeline_id = oci_devops_deploy_pipeline.cloudnative2021_tweetretriever_deploy_pipeline.id
+  description        = "Trigger Deployment Pipeline for Function Tweet Retriever"
+  display_name       = "trigger-tweet-retriever-deployment-pipeline"
+  is_pass_all_parameters_enabled = "true"
+}
+
+resource oci_devops_build_pipeline_stage build-stage-push-function-container-image-to-registry {
+  build_pipeline_id = oci_devops_build_pipeline.cloudnative2021_buildpipeline_tweet-retriever-function.id
+  build_pipeline_stage_predecessor_collection {
+    items {
+      id = oci_devops_build_pipeline_stage.build-stage-tweet-retriever-function-container-image.id
+    }
+  }
+  build_pipeline_stage_type = "DELIVER_ARTIFACT"
+
+  deliver_artifact_collection {
+    items {
+      artifact_id   = oci_devops_deploy_artifact.cloudnative2021_tweetretriever_deploy_ocir_artifact.id
+      artifact_name = "output01"
+    }
+  }
+  #deploy_pipeline_id = <<Optional value not found in discovery>>
+  description  = "Push the resulting container image for function tweet_retriever to Container Registry"
+  display_name = "push-function-container-image-to-registry"
+}
+
+resource oci_devops_build_pipeline_stage build-stage-tweet-retriever-function-container-image {
+  build_pipeline_id = oci_devops_build_pipeline.cloudnative2021_buildpipeline_tweet-retriever-function.id
+  build_pipeline_stage_predecessor_collection {
+    items {
+      id = oci_devops_build_pipeline.cloudnative2021_buildpipeline_tweet-retriever-function.id
+    }
+  }
+  build_pipeline_stage_type = "BUILD"
+  build_source_collection {
+    items {
+      branch = "main"
+      connection_type = "DEVOPS_CODE_REPOSITORY"
+      name            = "tweet_retriever_source"
+      repository_id   = oci_devops_repository.cloudnative-2021-on-oci-repo.id
+      repository_url  = oci_devops_repository.cloudnative-2021-on-oci-repo.http_url  
+      ## or use ssh_url ??
+      ## "https://devops.scmservice.us-ashburn-1.oci.oraclecloud.com/namespaces/idtwlqf2hanz/projects/cloudnative-2021_devops_project/repositories/cloudnative-2021-on-oci-repo"
+    }
+  }
+  build_spec_file = "/functions/tweet-summarizer/build_spec.yaml"
+  description  = ""
+  display_name = "build-function-container-image"
+  image = "OL7_X86_64_STANDARD_10"
+  primary_build_source               = "tweet_retriever_source"
+  stage_execution_timeout_in_seconds = "36000"
+}

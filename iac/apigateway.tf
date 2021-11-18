@@ -2,22 +2,11 @@
 
 
 locals { 
-  # store the first (and only) compartment returned from the data source in the local variable 
   publicsubnet = data.oci_core_subnets.publicsubnets.subnets[0]
   vcn_id = data.oci_core_vcns.cloudnative_2021_vcns.virtual_networks[0].id
 } 
 
  
-output "publicsubnet" { 
-  value = local.publicsubnet
-}
-output "vcn_id" { 
-  value = local.vcn_id
-}
-    
-
-
-
 resource oci_apigateway_gateway cloudnative-2021-apigateway {
   compartment_id = var.compartment_ocid
   display_name  = "cloudnative-2021-gateway"
@@ -128,11 +117,13 @@ data "oci_core_public_ips" "public_ips" {
 }
 
 output "publicipaddress" { 
-  value = local.public_ip[0].ip_address
+  # todo : use this value to make a test call to the ping function ??
+  value = local.public_ip_address
 }
 
 locals {
-  public_ip =  data.oci_core_public_ips.public_ips.public_ips
+  public_ips =  data.oci_core_public_ips.public_ips.public_ips
+  public_ip_address = data.oci_core_public_ips.public_ips.public_ips[0].ip_address
 }
 
 
@@ -181,21 +172,6 @@ resource oci_logging_log apigateway_cloudnative_2021_execution {
   retention_duration = "30"
 }
 
-resource oci_logging_log Function_cloudnative_2021App_invoke {
-  configuration {
-    compartment_id = var.compartment_ocid
-    source {
-      category    = "invoke"
-      resource    = "ocid1.fnapp.oc1.iad.aaaaaaaak5k4vwkjl3efqrb2m2vamia4vmsptrlw2k6z4sbhvcqiranxvtbq"
-      service     = "functions"
-      source_type = "OCISERVICE"
-    }
-  }
-  display_name = "cloudnative_2021App_invoke"
-  is_enabled         = "true"
-  log_group_id       = oci_logging_log_group.cloudnative-2021_log_group.id
-  log_type           = "SERVICE"
-  retention_duration = "30"
-}
+
 
 

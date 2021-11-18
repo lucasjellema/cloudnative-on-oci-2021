@@ -119,3 +119,19 @@ resource "oci_functions_function" "tweet_report_digester_fn" {
 }
 
 
+resource oci_logging_log Function_cloudnative_2021App_invoke {
+  configuration {
+    compartment_id = var.compartment_ocid
+    source {
+      category    = "invoke"
+      resource    = oci_functions_application.cloudnative_2021_fn_app.id
+      service     = "functions"
+      source_type = "OCISERVICE"
+    }
+  }
+  display_name = "cloudnative_2021App_invoke"
+  is_enabled         = "true"
+  log_group_id       = oci_logging_log_group.cloudnative-2021_log_group.id
+  log_type           = "SERVICE"
+  retention_duration = "30"
+}
