@@ -16,8 +16,10 @@ const persistRecord = async function (tableOCID, record) {
     };
 
     const body = { "value": record }
+    console.info(`NoSQL record creation from: ${JSON.stringify(body)}`)
 
     const persistRecordResponse = await ociAPIRequestor.executeOCIAPIRequest(nosqlPersistRecordOptions, JSON.stringify(body))
+    console.info(`NoSQL record creation response = ${JSON.stringify(persistRecordResponse)}`)
    
     return persistRecordResponse
 }
