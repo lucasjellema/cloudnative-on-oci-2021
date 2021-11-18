@@ -4,7 +4,7 @@ resource oci_nosql_table nosql_TWEETS_TABLE {
   is_auto_reclaimable = "false"
   name                = "TWEETS_TABLE"
   table_limits {
-    max_read_units     = "1"
+    max_read_units     = "50"  ## when too low, nothing can be queried
     max_storage_in_gbs = "1"
     max_write_units    = "1"
   }
