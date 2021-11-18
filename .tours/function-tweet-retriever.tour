@@ -1,0 +1,92 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Function Tweet Retriever",
+  "steps": [
+    {
+      "file": "functions/tweet-summarizer/readme.md",
+      "description": "The function Tweet Retriever (aka Tweet Summarizer) reads tweets from Twitter that have a specified hashtag over the specified time period.\r\nThis function is suitable for deployment using the Fn Project framework as serverless function, for example on OCI (Oracle Cloud Infrastructure).\r\nThis code tour explains the structure of this function - where happens what and how are the components connected.\r\n\r\nThis readme.md document provides an overview of the function, its configuration and deployment.",
+      "line": 3,
+      "selection": {
+        "start": {
+          "line": 103,
+          "character": 93
+        },
+        "end": {
+          "line": 103,
+          "character": 136
+        }
+      }
+    },
+    {
+      "file": "functions/tweet-summarizer/func.yaml",
+      "description": "The func.yaml file is a file recognized by the Fn Project framework. It determines the Container Image used as the foundation for the Function Container Image as well as the build container used by Fn. This file names the function - and thereby the container image produced by the build operation. In this case, the runtime is *node* and when the function is triggered, it is instantiated with the command ```node func.js``` ",
+      "line": 2
+    },
+    {
+      "file": "functions/tweet-summarizer/func.js",
+      "description": "Requests sent to this function are routed by the Fn runtime framework to the function passed to ```fdk.handle()```. This anonymous function receives both the request object as well as the context. Check the documentation [Fn RunTime Context](https://fnproject.io/tutorials/basics/UsingRuntimeContext/)",
+      "line": 6
+    },
+    {
+      "file": "functions/tweet-summarizer/func.js",
+      "description": "The context object contains the original http request url from which the query parameters can be extracted. Either based on these parameters or using default values for hashtag and minutes, a call is made to Node module tweetSummarizer, to do the actual work. The return value from function aggregateTweets in TweetSummarizer is added to the Function's response body.   ",
+      "line": 11
+    },
+    {
+      "file": "functions/tweet-summarizer/tweet-summarizer.js",
+      "description": "A call is made to function retrieveTweets to go out to the Twitter API and fetch tweets using the hashtag and minuutes parameters to filter.  ",
+      "line": 12
+    },
+    {
+      "file": "functions/tweet-summarizer/tweet-retriever/tweet-retriever.js",
+      "description": "This function returns the twitter credentials. These are defined either as a secret in an OCI Vault or in a local file. The format of these credentials in both cases: \r\n```\r\n{'consumer_key': 'Zdyatq71A', 'consumer_secret':'oqp98263','access_token':'1781276*&','access_token_secret': 'Hallo91823612t'}\r\n```\r\nNote: the single quote is used in the OCI Secret value, a double quote should be used when the Twitter credentials are defined in the file.",
+      "line": 19
+    },
+    {
+      "file": "functions/tweet-summarizer/oci-secret-retriever/oci-secret-retriever.js",
+      "description": "Using the oci-api-requestor - a module for making any REST API call to the OCI REST APIs - a call is made to the REST API for Vaults and Secrets to fetch the contents of a secret (that contains) the Twitter Credentials). In order to make this call possible, the dynamic group for functions has to be granted permission to read secrets from the vault. \r\n\r\nThe contents of secrets is returned in base64 encoded format, so to get the actual value, decoding needs to be done.",
+      "line": 17
+    },
+    {
+      "file": "functions/tweet-summarizer/tweet-retriever/tweet-retriever.js",
+      "description": "using the credentials for invoking the Twitter API, call function queryTweets to do the actual collection of tweets. ",
+      "line": 15
+    },
+    {
+      "file": "functions/tweet-summarizer/tweet-retriever/tweet-retriever.js",
+      "description": "Using the NPM twit module here. Create a new Twit object - using the twitter credentials. Invoke the Search (tweets) API and pass the query condition.",
+      "line": 53
+    },
+    {
+      "file": "functions/tweet-summarizer/tweet-summarizer.js",
+      "description": "The environment variable TWITTER_REPORTS_BUCKET can be set as configuration on the Function (or even the Application) after the Function has been deployed to OCI. Or the value is set directly in the environment before running the TweetSummarizer.aggregateTweets function. The value refers to the name of the bucket on OCI Object Storage in which the report with the fetched tweets should be created.",
+      "line": 17
+    },
+    {
+      "file": "functions/tweet-summarizer/tweet-summarizer.js",
+      "description": "The Tweets that have been retrieved are available in the object tweetsRetrieved. The objectWriter module can create documents on OCI Object Storage in the designated bucket.",
+      "line": 21
+    },
+    {
+      "file": "functions/tweet-summarizer/oci-object-writer/oci-object-writer.js",
+      "description": "The API Request to the Object Storage API is composed. We use the PUT operation to create a new document in the specified bucket in the designated namespace. The namespace as well as the OCI region are read from environment variables (that are usually defined through Configuration Parameters on the Function or Function Application in OCI )",
+      "line": 9,
+      "selection": {
+        "start": {
+          "line": 7,
+          "character": 24
+        },
+        "end": {
+          "line": 7,
+          "character": 37
+        }
+      }
+    },
+    {
+      "file": "functions/tweet-summarizer/tweet-summarizer.js",
+      "description": "When the Tweet Report has been written to the Bucket on Object Storage, this function returns its response.",
+      "line": 24
+    }
+  ],
+  "ref": "main"
+}
