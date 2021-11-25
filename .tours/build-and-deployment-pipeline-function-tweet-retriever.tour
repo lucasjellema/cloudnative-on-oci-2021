@@ -1,0 +1,142 @@
+{
+  "$schema": "https://aka.ms/codetour-schema",
+  "title": "Build and Deployment Pipeline Function Tweet Retriever",
+  "steps": [
+    {
+      "file": "iac/devops.tf",
+      "description": "The source Code of the function Tweet Retriever is in this Code Repository - that is mirrored with this [GitHub Repository](https://github.com/lucasjellema/cloudnative-on-oci-2021). ",
+      "line": 168,
+      "selection": {
+        "start": {
+          "line": 174,
+          "character": 57
+        },
+        "end": {
+          "line": 174,
+          "character": 112
+        }
+      }
+    },
+    {
+      "file": "iac/devops.tf",
+      "description": "This Build Pipeline Stage is the first to process the source code from the function. This stage runs a build server, clones the source code repository and executes the build specification file.",
+      "line": 249
+    },
+    {
+      "file": "functions/tweet-summarizer/build_spec.yaml",
+      "description": "This build_spec.yaml file describes the actions performed on the build server to take the sources and process them into the artifacts. The resulting artifact in this case is an Fn Function Container Image.  ",
+      "line": 9
+    },
+    {
+      "file": "functions/tweet-summarizer/build_spec.yaml",
+      "description": "This outputArtifact takes the container image that the build process produces in the local Docker registry with the tag tweet_retriever_function_image:latest. The next stage in the build process can use this output artifact (and push it to the OCI Container Image Registry)",
+      "line": 90,
+      "selection": {
+        "start": {
+          "line": 90,
+          "character": 5
+        },
+        "end": {
+          "line": 94,
+          "character": 52
+        }
+      }
+    },
+    {
+      "file": "functions/tweet-summarizer/build_spec.yaml",
+      "description": "The function is a Node application. In order to build it, this step installs the Node tools.",
+      "line": 39
+    },
+    {
+      "file": "functions/tweet-summarizer/build_spec.yaml",
+      "description": "the fn build operation interprets the func.yaml file and using its configuration will produce the container image that is subsequently tagged. ",
+      "line": 77,
+      "selection": {
+        "start": {
+          "line": 77,
+          "character": 7
+        },
+        "end": {
+          "line": 79,
+          "character": 133
+        }
+      }
+    },
+    {
+      "file": "functions/tweet-summarizer/func.yaml",
+      "description": "This *runtime* property determines what the base container image is that the Fn build process uses - the latest Node runtime image.",
+      "line": 4
+    },
+    {
+      "file": "iac/devops.tf",
+      "description": "The second stage in the build pipeline takes the container image produced in the first stage and pushes it to the container image registry. These lines link the container image that is the output from the previous stage (output01) to the artifact that represents the repository in the container image registry for the tweet_retriever function.",
+      "line": 234,
+      "selection": {
+        "start": {
+          "line": 233,
+          "character": 6
+        },
+        "end": {
+          "line": 234,
+          "character": 33
+        }
+      }
+    },
+    {
+      "file": "iac/devops.tf",
+      "description": "This Terraform resource describes the OCI DevOps artifact that represents the container image for the Tweet Retriever function.",
+      "line": 58
+    },
+    {
+      "file": "iac/devops.tf",
+      "description": "This stage in the build pipeline triggers the Deployment Pipeline that takes the Function Container Image from the Registry and Updates the function based on this latest definition.",
+      "line": 216
+    },
+    {
+      "file": "iac/devops.tf",
+      "description": "Once this stage is complete, not only has a new container image been built, it has also been deployed through this deployment pipeline. We could consider invoking the redeployed function as test - either from an Integration Stage in a (second) deployment pipeline or in a build stage in this build pipeline.   ",
+      "line": 219,
+      "selection": {
+        "start": {
+          "line": 217,
+          "character": 2
+        },
+        "end": {
+          "line": 219,
+          "character": 42
+        }
+      }
+    },
+    {
+      "file": "iac/devops.tf",
+      "description": "These are the most important lines in the Deploy Stage in the Deploy Pipeline. The Deployment Artifact (that was produced by the triggering Build Pipeline) is taken and deployed to the Environment (defined for the Function Tweet Retriever).",
+      "line": 134,
+      "selection": {
+        "start": {
+          "line": 133,
+          "character": 3
+        },
+        "end": {
+          "line": 134,
+          "character": 118
+        }
+      }
+    },
+    {
+      "file": "iac/devops.tf",
+      "description": "The definition of the Tweet Retriever Function Deploy Environment. This is a reference to the actual Function (its OCID) that is redeployed (or rather that is defined by a new container image). In order to run the deployment, the function need to already exist.",
+      "line": 47,
+      "selection": {
+        "start": {
+          "line": 45,
+          "character": 3
+        },
+        "end": {
+          "line": 47,
+          "character": 73
+        }
+      }
+    }
+  ],
+  "ref": "main"
+}
