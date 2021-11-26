@@ -25,7 +25,7 @@ const aggregateTweets = async function (hashtag, minutes = 5) {
         "request": { "hashtag": hashtag, "minutes": minutes },
         "result": { "numberOfTweets": tweetsRetrieved.length
                   , "fileName": objectName
-                  , "message":"no special message this time round" 
+                  , "message":"A Somewhat special message for this occasion" 
                   }
     }
 }

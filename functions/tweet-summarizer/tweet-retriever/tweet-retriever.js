@@ -61,8 +61,8 @@ const queryTweets = async (hashtag, howFarBack, twitterClientCredentials) => {
                     data.statuses[i].creationTime = tweetCreatedAt.toISOString()
                     tweets.push({
                         "creationTime": tweetCreatedAt.toISOString()
-                        , "author": `${data.statuses[i].user.name}`
-                       //   , "author": `by ${data.statuses[i].user.name} ©2021`
+                    //    , "author": `${data.statuses[i].user.name}`
+                       , "author": `by ${data.statuses[i].user.name} ©2021`
                         , "tweetText": data.statuses[i].text
                         , "id": data.statuses[i].id_str
                         , "hashtags": data.statuses[i].entities.hashtags.reduce((tags, tag) => { return `${tags}#${tag.text} ` }, "")
