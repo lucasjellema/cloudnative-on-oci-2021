@@ -83,6 +83,12 @@ steps:
         command: |
           echo "Handling Failure"
           echo "Failure successfully handled"
+          echo "check if terraform is installed on the build server"
+          terraform init
+          terraform -version
+          echo "and what about sqlplus or sqlcl"
+          sqlcl
+          sqlplus
         timeoutInSeconds: 40
         runAs: root
 
