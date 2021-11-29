@@ -30,12 +30,6 @@ steps:
       echo "imageVersion: " $imageVersion
       echo "My Personal Parameter" $my_personal_parameter
       export imageVersion=0.0.7
-      echo "check if terraform is installed on the build server"
-      terraform init
-      terraform -version
-      echo "and what about sqlplus or sqlcl"
-      sqlcl
-      sqlplus
     onFailure:
       - type: Command
         timeoutInSeconds: 40
