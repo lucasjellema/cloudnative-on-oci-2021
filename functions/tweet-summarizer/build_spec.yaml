@@ -13,6 +13,7 @@ env:
 
   # exportedVariables are made available to use as parameters in sucessor Build Pipeline stages
   # For this Build to run, the Build Pipeline needs to have a BUILDRUN_HASH parameter set
+  # the imageVersion variable corresponds with a build pipeline parameter. By making this an exported variable and by explicitly setting its value in a build step, we can override the parameter value defined for the build run
   exportedVariables:
     - BUILDRUN_HASH
     - imageVersion
@@ -29,6 +30,12 @@ steps:
       echo "imageVersion: " $imageVersion
       echo "My Personal Parameter" $my_personal_parameter
       export imageVersion=0.0.7
+      echo "check if terraform is installed on the build server"
+      terraform init
+      terraform -version
+      echo "and what about sqlplus or sqlcl"
+      sqlcl
+      sqlplus
     onFailure:
       - type: Command
         timeoutInSeconds: 40
@@ -86,12 +93,7 @@ steps:
         command: |
           echo "Handling Failure"
           echo "Failure successfully handled"
-          echo "check if terraform is installed on the build server"
-          terraform init
-          terraform -version
-          echo "and what about sqlplus or sqlcl"
-          sqlcl
-          sqlplus
+
         timeoutInSeconds: 40
         runAs: root
 
